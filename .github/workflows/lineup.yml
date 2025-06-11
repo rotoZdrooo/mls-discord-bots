@@ -20,5 +20,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Cache posted_lineups.json
+        uses: actions/cache@v3
+        with:
+          path: posted_lineups.json
+          key: posted-cache-lineups-${{ github.ref }}
+
       - name: Run lineup bot
         run: python lineup_bot.py
