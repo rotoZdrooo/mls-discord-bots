@@ -12,6 +12,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Download posted_lineups.json
+        uses: actions/download-artifact@v4
+        with:
+          name: lineup-cache
+        continue-on-error: true  # skip error if it doesn't exist on first run
+
+      - name: Move JSON into working dir (if exists)
+        run: |
+          if [ -f posted_lineups.json ]; then
+            echo "✅ posted_lineups.json found"
+          else
+            echo "{}" > posted_lineups.json
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -20,11 +34,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Cache posted_lineups.json
-        uses: actions/cache@v3
-        with:
-          path: posted_lineups.json
-          key: posted-cache-lineups-${{ github.ref }}
-
       - name: Run lineup bot
         run: python lineup_bot.py
+
+      - name: Upload updated posted_lineups.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: lineup-cache
+          path: posted_lineups.json
