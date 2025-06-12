@@ -6,7 +6,7 @@ import time
 from datetime import datetime
 
 api_url = "https://api.rotowire.com/Soccer/News.php?key=b0d5ug2n1mtubrhr9s4n"
-discord_webhook_url = "https://discord.com/api/webhooks/YOUR_NEWS_WEBHOOK_HERE"
+discord_webhook_url = "https://discord.com/api/webhooks/1382064061641920592/BbgLJGdnoIACx1sXGd482r1U-eTHPLQ-rAlPsOBnvycMMotTOtG200ISPGlsvv7WmtfR"
 posted_ids_file = "posted_news_ids.json"
 headers = {"User-Agent": "Mozilla/5.0"}
 
