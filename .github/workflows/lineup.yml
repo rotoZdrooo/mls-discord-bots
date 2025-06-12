@@ -9,15 +9,16 @@ jobs:
   run-lineup-bot:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Restore posted_lineups.json from cache
-        uses: actions/cache@v3
+      - name: Download posted_lineups.json
+        uses: actions/download-artifact@v4
         with:
-          path: posted_lineups.json
-          key: posted-lineups-key
+          name: lineup-cache
+        continue-on-error: true
 
-      - name: Ensure file exists
+      - name: Create fallback posted_lineups.json if missing
         run: |
           if [ ! -f posted_lineups.json ]; then
             echo "{}" > posted_lineups.json
@@ -33,4 +34,10 @@ jobs:
 
       - name: Run lineup bot
         run: python lineup_bot.py
+
+      - name: Upload updated posted_lineups.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: lineup-cache
+          path: posted_lineups.json
 
