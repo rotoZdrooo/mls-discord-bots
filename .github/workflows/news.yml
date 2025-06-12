@@ -2,24 +2,23 @@ name: News Bot
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
   run-news-bot:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Restore posted_news_ids.json from cache
-        uses: actions/cache@v3
+      - name: Download posted_news_ids.json
+        uses: actions/download-artifact@v4
         with:
-          path: posted_news_ids.json
-          key: posted-news-key
+          name: news-cache
+        continue-on-error: true
 
-      - name: Ensure posted_news_ids.json exists
+      - name: Create fallback posted_news_ids.json if missing
         run: |
           if [ ! -f posted_news_ids.json ]; then
             echo "[]" > posted_news_ids.json
@@ -35,4 +34,10 @@ jobs:
 
       - name: Run news bot
         run: python news_bot.py
+
+      - name: Upload updated posted_news_ids.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-cache
+          path: posted_news_ids.json
 
