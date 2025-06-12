@@ -16,7 +16,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: lineup-cache
-        continue-on-error: true
+        continue-on-error: true  # Prevent crash if artifact doesn't exist yet
 
       - name: Create fallback posted_lineups.json if missing
         run: |
@@ -40,4 +40,3 @@ jobs:
         with:
           name: lineup-cache
           path: posted_lineups.json
-
