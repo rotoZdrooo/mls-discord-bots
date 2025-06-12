@@ -7,7 +7,7 @@ from datetime import datetime
 import hashlib
 
 api_url = "https://api.rotowire.com/Soccer/MLS/Lineups.php?key=b0d5ug2n1mtubrhr9s4n"
-discord_webhook_url = "https://discord.com/api/webhooks/YOUR_LINEUP_WEBHOOK_HERE"
+discord_webhook_url = "https://discord.com/api/webhooks/1382337930651111505/ZGsGppAr2JEFEwMD_6zPleJrvjwyw0p3OaEwds4oLkgi2-rfIZ7CoLWgbJCCYbclSdVB"
 posted_file = "posted_lineups.json"
 headers = {"User-Agent": "Mozilla/5.0"}
 
