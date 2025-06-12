@@ -7,7 +7,7 @@ from datetime import datetime
 import hashlib
 
 api_url = "https://api.rotowire.com/Soccer/MLS/Lineups.php?key=b0d5ug2n1mtubrhr9s4n"
-discord_webhook_url = "https://discord.com/api/webhooks/1382337930651111505/ZGsGppAr2JEFEwMD_6zPleJrvjwyw0p3OaEwds4oLkgi2-rfIZ7CoLWgbJCCYbclSdVB"
+discord_webhook_url = "https://discord.com/api/webhooks/YOUR_LINEUP_WEBHOOK_HERE"
 posted_file = "posted_lineups.json"
 headers = {"User-Agent": "Mozilla/5.0"}
 
@@ -53,10 +53,9 @@ for game in games.findall("Game"):
         if len(player_names) < 1:
             continue
 
-        # Build hash of lineup
         joined_lineup = "\n".join(player_names)
         lineup_hash = hashlib.sha1(joined_lineup.encode("utf-8")).hexdigest()
-        post_key = f"{game_id}_{team_id}_{lineup_status}"
+        post_key = f"{game_id}_{team_id}"  # ⬅️ No status included
 
         if posted_hashes.get(post_key) == lineup_hash:
             continue  # already posted
@@ -69,16 +68,17 @@ for game in games.findall("Game"):
                     "description": f"🆚 {opponent}\n🕒 Kickoff: {kickoff_dt}",
                     "color": 0x2ecc71 if lineup_status == "C" else 0xf1c40f,
                     "fields": [{"name": "Starting XI", "value": joined_lineup}],
-                    "footer": {"text": "Full lineups → Rotowire"}
+                    "footer": {"text": "Full lineups → Rotowire"},
+                    "timestamp": datetime.utcnow().isoformat()
                 }
             ]
         }
 
         try:
             requests.post(discord_webhook_url, json=embed)
-            time.sleep(1.0)
             posted_hashes[post_key] = lineup_hash
             new_posts += 1
+            time.sleep(1.0)
         except Exception as e:
             print(f"❌ Error posting lineup for {team_name}:", e)
 
